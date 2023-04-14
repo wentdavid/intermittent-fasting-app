@@ -3,6 +3,13 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, Modal } from "react-na
 import Svg, { Circle, G, Image as SvgImage } from "react-native-svg";
 import StageInfoOverlayBloodSugarRises from "../components/StageInfoOverlay/bloodSugarRises";
 
+import bloodSugarRisesImage from "../assets/images/fastingStages/bloodSugarRises.png";
+import bloodSugarDropsImage from "../assets/images/fastingStages/bloodSugarDrops.png";
+import bloodSugarNormalizesImage from "../assets/images/fastingStages/bloodSugarNormalises.png";
+import fatBurningImage from "../assets/images/fastingStages/fatBurning.png";
+import autophagyImage from "../assets/images/fastingStages/autophagy.png";
+import growthHormonesImage from "../assets/images/fastingStages/growthHormones.png";
+
 
 const HomeScreen = () => {
   const [fastingStatus, setFastingStatus] = useState("stopped");
@@ -12,6 +19,7 @@ const HomeScreen = () => {
   const [showInfoOverlay, setShowInfoOverlay] = useState(false);
   const [overlayTitle, setOverlayTitle] = useState("");
   const [overlayDescription, setOverlayDescription] = useState("");
+  const [overlayImage, setOverlayImage] = useState("");
 
   useEffect(() => {
     let timer;
@@ -46,9 +54,10 @@ const HomeScreen = () => {
     return `${formattedHours} : ${formattedMinutes} : ${formattedSeconds}`;
   };
 
-  const handleIconPress = (title, description) => {
+  const handleIconPress = (title, description, image) => {
     setOverlayTitle(title);
     setOverlayDescription(description);
+    setOverlayImage(image);
     setShowInfoOverlay(true);
   };
 
@@ -90,10 +99,11 @@ const HomeScreen = () => {
           onPress={() =>
             handleIconPress(
               "Blood Sugar Rises",
-              "When you stop eating, your blood sugar levels drop. This causes your body to release hormones that tell your liver to release glucose into your bloodstream."
+              "After eating, your blood sugar levels rise. This is because your body is breaking down the food you just ate.",
+              bloodSugarRisesImage
             )
           }
-          href={require("../assets/images/fastingStages/bloodSugarRises.png")}
+          href={bloodSugarRisesImage}
           height="12"
           width="12"
           x={44}
@@ -101,7 +111,14 @@ const HomeScreen = () => {
         />
 
         <SvgImage // blood sugar drops (2hrs)
-          href={require("../assets/images/fastingStages/bloodSugarDrops.png")}
+          onPress={() =>
+            handleIconPress(
+              "Blood Sugar Drops",
+              "When you stop eating, your blood sugar levels drop. This is because your body is no longer breaking down the food you just ate.",
+              bloodSugarDropsImage
+            )
+          }
+          href={bloodSugarDropsImage}
           height="12"
           width="12"
           x={72.5}
@@ -109,7 +126,14 @@ const HomeScreen = () => {
         />
 
         <SvgImage // blood sugar normalizes (8hrs)
-          href={require("../assets/images/fastingStages/bloodSugarNormalises.png")}
+          onPress={() =>
+            handleIconPress(
+              "Blood Sugar Normalizes",
+              "After 8 hours of fasting, your blood sugar levels normalize. This is because your body has used up all the glucose in your blood.",
+              bloodSugarNormalizesImage
+            )
+          }
+          href={bloodSugarNormalizesImage}
           height="12"
           width="12"
           x={44}
@@ -117,7 +141,14 @@ const HomeScreen = () => {
         />
 
         <SvgImage // fat burning (12hrs)
-          href={require("../assets/images/fastingStages/fatBurning.png")}
+          onPress={() =>
+            handleIconPress(
+              "Fat Burning",
+              "After 12 hours of fasting, your body starts to burn fat for energy. This is because your body has used up all the glucose in your blood.",
+              fatBurningImage
+            )
+          }
+          href={fatBurningImage}
           height="12"
           width="12"
           x={4}
@@ -125,7 +156,14 @@ const HomeScreen = () => {
         />
 
         <SvgImage // autophagy (14hrs)
-          href={require("../assets/images/fastingStages/autophagy.png")}
+          onPress={() =>
+            handleIconPress(
+              "Autophagy",
+              "After 14 hours of fasting, autophagy begins. This is when your body starts to break down and recycle damaged cells.",
+              autophagyImage
+            )
+          }
+          href={autophagyImage}
           height="12"
           width="12"
           x={16}
@@ -133,7 +171,14 @@ const HomeScreen = () => {
         />
 
         <SvgImage // growth hormones increase (15hrs)
-          href={require("../assets/images/fastingStages/growthHormones.png")}
+          onPress={() =>
+            handleIconPress(
+              "Growth Hormones Increase",
+              "After 15 hours of fasting, growth hormones increase. This is when your body starts to repair and rebuild damaged cells.",
+              growthHormonesImage
+            )
+          }
+          href={growthHormonesImage}
           height="12"
           width="12"
           x={29}
@@ -169,6 +214,7 @@ const HomeScreen = () => {
         onClose={() => setShowInfoOverlay(false)}
         title={overlayTitle}
         description={overlayDescription}
+        image={overlayImage}
       />
     </View>
   );
