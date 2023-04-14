@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image, Modal } from "react-native";
 import Svg, { Circle, G, Image as SvgImage } from "react-native-svg";
+import StageInfoOverlayBloodSugarRises from "../components/StageInfoOverlay/bloodSugarRises";
+
 
 const HomeScreen = () => {
   const [fastingStatus, setFastingStatus] = useState("stopped");
   const [fastingTime, setFastingTime] = useState(0);
   const [circleProgress, setCircleProgress] = useState(0);
   const [fastingOption, setFastingOption] = useState("16/8");
+  const [showInfoOverlay, setShowInfoOverlay] = useState(false);
+  const [overlayTitle, setOverlayTitle] = useState("");
+  const [overlayDescription, setOverlayDescription] = useState("");
 
   useEffect(() => {
     let timer;
@@ -25,7 +30,7 @@ const HomeScreen = () => {
   }, [fastingStatus]);
 
   useEffect(() => {
-    const progress = (fastingTime / 5) * 100;
+    const progress = (fastingTime / 16) * 100;
     setCircleProgress(progress > 100 ? 100 : progress);
   }, [fastingTime]);
 
@@ -41,6 +46,13 @@ const HomeScreen = () => {
     return `${formattedHours} : ${formattedMinutes} : ${formattedSeconds}`;
   };
 
+  const handleIconPress = (title, description) => {
+    setOverlayTitle(title);
+    setOverlayDescription(description);
+    setShowInfoOverlay(true);
+  };
+
+ 
   return (
     <View style={styles.container}>
       <Text style={styles.optionText}>Fasting Option: {fastingOption}</Text>
@@ -50,50 +62,82 @@ const HomeScreen = () => {
       <TouchableOpacity onPress={() => setFastingOption("16/8")}>
         <Text>16/8</Text>
       </TouchableOpacity>
-      <Svg height="300" width="300" viewBox="0 0 100 100">
+      <Svg height="350" width="300" viewBox="0 0 100 100">
         <Circle
           cx="50"
           cy="50"
           r="40"
           stroke="#e0e0e0"
-          strokeWidth="20"
+          strokeWidth="15"
           fill="none"
         />
-        
-        <Circle
-          cx="50"
-          cy="50"
-          r="40"
-          stroke="#4caf50"
-          strokeWidth="20"
-          fill="none"
-          strokeDasharray="251.2"
-          strokeLinecap="round"
-          strokeDashoffset={`${251.2 - (circleProgress / 100) * 251.2}`}
+
+        <G transform="rotate(-90, 50, 50)">
+          <Circle
+            cx="50"
+            cy="50"
+            r="40"
+            stroke="#4caf50"
+            strokeWidth="15"
+            fill="none"
+            strokeDasharray="251.2"
+            strokeLinecap="round"
+            strokeDashoffset={`${251.2 - (circleProgress / 100) * 251.2}`}
+          />
+        </G>
+
+        <SvgImage // blood sugar rises
+          onPress={() =>
+            handleIconPress(
+              "Blood Sugar Rises",
+              "When you stop eating, your blood sugar levels drop. This causes your body to release hormones that tell your liver to release glucose into your bloodstream."
+            )
+          }
+          href={require("../assets/images/fastingStages/bloodSugarRises.png")}
+          height="12"
+          width="12"
+          x={44}
+          y={4}
         />
 
-        <SvgImage
-          href={require("../assets/checkmark.png")}
-          height="24"
-          width="24"
-          x={60}
-          y={5}
+        <SvgImage // blood sugar drops (2hrs)
+          href={require("../assets/images/fastingStages/bloodSugarDrops.png")}
+          height="12"
+          width="12"
+          x={72.5}
+          y={16}
         />
 
-        <SvgImage
-          href={require("../assets/checkmark.png")}
-          height="24"
-          width="24"
-          x={60}
-          y={71}
+        <SvgImage // blood sugar normalizes (8hrs)
+          href={require("../assets/images/fastingStages/bloodSugarNormalises.png")}
+          height="12"
+          width="12"
+          x={44}
+          y={84}
         />
 
-        <SvgImage
-          href={require("../assets/checkmark.png")}
-          height="24"
-          width="24"
-          x={3}
-          y={57}
+        <SvgImage // fat burning (12hrs)
+          href={require("../assets/images/fastingStages/fatBurning.png")}
+          height="12"
+          width="12"
+          x={4}
+          y={44}
+        />
+
+        <SvgImage // autophagy (14hrs)
+          href={require("../assets/images/fastingStages/autophagy.png")}
+          height="12"
+          width="12"
+          x={16}
+          y={15.5}
+        />
+
+        <SvgImage // growth hormones increase (15hrs)
+          href={require("../assets/images/fastingStages/growthHormones.png")}
+          height="12"
+          width="12"
+          x={29}
+          y={7}
         />
       </Svg>
 
@@ -102,9 +146,15 @@ const HomeScreen = () => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setFastingStatus("started")}
+          onPress={() =>
+            setFastingStatus(
+              fastingStatus === "started" ? "stopped" : "started"
+            )
+          }
         >
-          <Text style={styles.buttonText}>Start</Text>
+          <Text style={styles.buttonText}>
+            {fastingStatus === "started" ? "Stop" : "Start"}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
@@ -112,13 +162,14 @@ const HomeScreen = () => {
         >
           <Text style={styles.buttonText}>Pause</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setFastingStatus("stopped")}
-        >
-          <Text style={styles.buttonText}>Stop</Text>
-        </TouchableOpacity>
       </View>
+
+      <StageInfoOverlayBloodSugarRises
+        visible={showInfoOverlay}
+        onClose={() => setShowInfoOverlay(false)}
+        title={overlayTitle}
+        description={overlayDescription}
+      />
     </View>
   );
 };
@@ -163,3 +214,4 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+
