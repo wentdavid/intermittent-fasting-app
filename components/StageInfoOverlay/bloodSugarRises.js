@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet, Modal } from "react-native";
 
 const StageInfoOverlayBloodSugarRises = ({
   visible,
@@ -18,6 +18,10 @@ const StageInfoOverlayBloodSugarRises = ({
         <View style={styles.modalView}>
           <Text style={styles.modalTitle}>{title}</Text>
           <Text style={styles.modalText}>{description}</Text>
+          <Image
+            style={styles.modalImage}
+            source={require("../../assets/images/fastingStages/bloodSugarRises.png")}
+          />
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
@@ -36,8 +40,9 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 30,
     padding: 20,
+    margin: 20,
     alignItems: "center",
   },
   modalTitle: {
@@ -49,6 +54,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
+    modalImage: {
+    width: 120,
+    resizeMode: "contain",
+    },
   closeButton: {
     backgroundColor: "#4caf50",
     padding: 10,
